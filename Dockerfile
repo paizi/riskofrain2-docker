@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=fragsoc/steamcmd-wine-xvfb
+ARG BASE_IMAGE=ghcr.io/paizi/steamcmd-wine-xvfb-docker:master
 FROM rustagainshell/rash:1.0.0 AS rash
 FROM ${BASE_IMAGE} AS vanilla
 MAINTAINER Laura Demkowicz-Duffy <fragsoc@yusu.org>
@@ -53,14 +53,14 @@ WORKDIR $INSTALL_LOC
 ENTRYPOINT ["rash", "/docker-entrypoint.rh"]
 
 # Temporary container to download mod files with curl and unzip them
-FROM debian:stretch-slim AS curl
+FROM debian:bookworm-slim AS curl
 
 RUN apt-get update && \
     apt-get install -y unzip curl
 
-ARG BEPINEX_VERSION=5.4.1801
+ARG BEPINEX_VERSION=5.4.2113
 ARG ENIGMATIC_THUNDER_VERSION=0.1.5
-ARG R2API_VERSION=3.0.71
+ARG R2API_VERSION=5.0.5
 
 WORKDIR /tmp
 RUN curl -L -o ./r2api.zip \
@@ -92,13 +92,13 @@ RUN ln -s $MODS_LOC $INSTALL_LOC/BepInEx/plugins/rootmods
 RUN ln -s $MODS_CONFIG_LOC $INSTALL_LOC/BepInEx/config
 
 VOLUME $MODS_LOC
-VOLUME $MODS_CONFIG_LOG
+VOLUME $MODS_CONFIG_LOC
 
 # R2API + BepInEx
 FROM bepinex AS r2api
 
 COPY --from=curl --chown=ror2 /tmp/r2api/plugins $INSTALL_LOC/BepInEx/plugins/
-COPY --from=curl --chown=ror2 /tmp/r2api/monomod $INSTALL_LOC/BepInEx/monomod/
+#deprecated COPY --from=curl --chown=ror2 /tmp/r2api/monomod $INSTALL_LOC/BepInEx/monomod/
 
 # EnigmaticThunder + BepInEx
 FROM bepinex AS enigmaticthunder
