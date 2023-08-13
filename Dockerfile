@@ -88,7 +88,7 @@ USER ror2
 COPY --from=curl --chown=ror2 /tmp/bepinex/BepInExPack/BepInEx $INSTALL_LOC/BepInEx
 COPY --from=curl --chown=ror2 /tmp/bepinex/BepInExPack/doorstop_config.ini $INSTALL_LOC
 COPY --from=curl --chown=ror2 /tmp/bepinex/BepInExPack/winhttp.dll $INSTALL_LOC
-RUN ln -s $MODS_LOC $INSTALL_LOC/BepInEx/plugins/rootmods
+#deprecated RUN ln -s $MODS_LOC $INSTALL_LOC/BepInEx/plugins/rootmods
 RUN ln -s $MODS_CONFIG_LOC $INSTALL_LOC/BepInEx/config
 
 VOLUME $MODS_LOC
